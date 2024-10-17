@@ -1,7 +1,7 @@
 import React, { useRef, useContext } from "react";
 import passwordContext from "../context/passwordContext";
 import formContext from "../context/formContext";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
 
 const PasswordForm = () => {
@@ -39,31 +39,6 @@ const PasswordForm = () => {
     }
     return (
         <>
-            {/* <div className="absolute top-0 z-[-2] h-full w-full bg-blue-50 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div> */}
-
-            <Toaster
-                position="top-right"
-                reverseOrder={true}
-                gutter={8}
-                toastOptions={{
-                    // Define default options
-                    className: '',
-                    duration: 5000,
-                    style: {
-                        background: '#363636',
-                        color: '#fff',
-                    },
-
-                    // Default options for specific types
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black',
-                        },
-                    },
-                }}
-            />
             <div className="md:container md:mx-auto md:pb-8 md:pt-16 md:px-40">
                 <h1 className="text-4xl font-bold text-center">
                     <span className="text-blue-500">&lt;</span>
@@ -75,7 +50,7 @@ const PasswordForm = () => {
                 </p>
                 <div className="flex flex-col p-4 w-full text-black gap-8 justify-center items-center">
                     <input
-                        className="rounded-full border border-blue-600 w-full px-2 py-1"
+                        className="rounded-full border border-blue-600 w-full px-4 py-1"
                         type="text"
                         value={form.site}
                         id="site"
@@ -85,7 +60,7 @@ const PasswordForm = () => {
                     />
                     <div className="flex flex-col md:flex-row w-full gap-8">
                         <input
-                            className="flex-grow rounded-full border border-blue-600 px-2 py-1"
+                            className="flex-grow rounded-full border border-blue-600 px-4 py-1"
                             type="text"
                             value={form.username}
                             aria-invalid="username"
@@ -95,7 +70,7 @@ const PasswordForm = () => {
                         />
                         <div className="relative flex-grow">
                             <input
-                                className="rounded-full border border-blue-600 w-full px-2 py-1"
+                                className="rounded-full border border-blue-600 w-full px-4 py-1"
                                 type="password"
                                 ref={(passwordRef)}
                                 value={form.password}

@@ -10,6 +10,10 @@ import PasswordState from './context/PasswordState'
 import PasswordTable from './components/PasswordTable'
 import PasswordForm from './components/PasswordForm'
 import FormState from './context/FormState'
+import Login from './components/Login'
+import { Toaster } from 'react-hot-toast';
+import Signup from './components/Signup'
+
 
 function App() {
 
@@ -18,6 +22,29 @@ function App() {
       <PasswordState>
         <FormState>
           <Router>
+            <Toaster
+              position="bottom-right"
+              reverseOrder={true}
+              gutter={8}
+              toastOptions={{
+                // Define default options
+                className: '',
+                duration: 5000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
+                },
+
+                // Default options for specific types
+                success: {
+                  duration: 3000,
+                  theme: {
+                    primary: 'green',
+                    secondary: 'black',
+                  },
+                },
+              }}
+            />
             {/* Container with flexbox layout */}
             <div className="flex flex-col min-h-screen">
               <Navbar />
@@ -27,6 +54,8 @@ function App() {
                     <PasswordForm />
                     <PasswordTable />
                   </>} />
+                  <Route exct path="/login" element={<Login />} />
+                  <Route exct path="/signup" element={<Signup />} />
                 </Routes>
               </div>
               <Footer />

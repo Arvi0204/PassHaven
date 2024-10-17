@@ -1,7 +1,7 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import passwordContext from "../context/passwordContext";
 
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import formContext from '../context/formContext';
 
 
@@ -9,7 +9,8 @@ const PasswordTable = () => {
     let context = useContext(passwordContext);
     const { passwordArray, setPasswordArray } = context;
     context = useContext(formContext);
-    const {setForm} = context;
+    const { setForm } = context;
+    const [visiblePasswords, setVisiblePasswords] = useState({});
 
     useEffect(() => {
         let passwords = localStorage.getItem("passwords");
@@ -19,9 +20,12 @@ const PasswordTable = () => {
         else setPasswordArray([]);
     }, [])
 
-    const copyText = (text) => {
+    const copyText = (text, type) => {
         navigator.clipboard.writeText(text);
-        toast.success("Copied to clipboard")
+        if (type === "username")
+            toast.success("Copied username to clipboard")
+        else if (type === "password")
+            toast.success("Copied password to clipboard")
     }
 
     const deletePassword = (id) => {
@@ -35,33 +39,14 @@ const PasswordTable = () => {
         setForm(passwordArray.filter(item => item.id === id)[0]);
         // Removing the values from password array to avoid duplication
         setPasswordArray(passwordArray.filter(item => item.id !== id))
+        
     }
+    const togglePasswordVisibility = (id) => {
+        setVisiblePasswords(prevState => ({ ...prevState, [id]: !prevState[id] }));
+    };
 
     return (
         <>
-            <Toaster
-                position="top-right"
-                reverseOrder={true}
-                gutter={8}
-                toastOptions={{
-                    // Define default options
-                    className: '',
-                    duration: 5000,
-                    style: {
-                        background: '#363636',
-                        color: '#fff',
-                    },
-
-                    // Default options for specific types
-                    success: {
-                        duration: 3000,
-                        theme: {
-                            primary: 'green',
-                            secondary: 'black',
-                        },
-                    },
-                }}
-            />
             <div className="md:container md:mx-auto md:px-40">
                 <h1 className="text-blue-600 font-bold text-3xl underline text-center py-5">Your Passwords</h1>
                 {passwordArray.length === 0 && <div> No Passwords to show </div>}
@@ -77,6 +62,7 @@ const PasswordTable = () => {
                     <tbody className="bg-blue-100">
                         {passwordArray.map((item, index) => {
                             const url = item.site.startsWith("http://") || item.site.startsWith("https://") ? item.site : `https://${item.site}`;
+                            const isPasswordVisible = visiblePasswords[item.id]; // Check if password is visible
                             return (
                                 <tr key={index}>
                                     <td className="py-2 border-2 border-black text-center">
@@ -87,16 +73,19 @@ const PasswordTable = () => {
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center">
                                             <span>{item.username}</span>
-                                            <div className='cursor-pointer' onClick={() => { copyText(item.username) }}>
+                                            <span className='cursor-pointer' onClick={() => { copyText(item.username, "username") }}>
                                                 <img src="icons/copy.gif" alt="" width={32} />
-                                            </div>
+                                            </span>
                                         </div>
                                     </td>
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center">
-                                            <span>{item.password}</span>
-                                            <div className='cursor-pointer' onClick={() => { copyText(item.password) }}>
+                                            <span className='mr-10'>{isPasswordVisible ? item.password : '*'.repeat(item.password.length)}</span>
+                                            <div className='cursor-pointer mr-2' onClick={() => { copyText(item.password, "password") }}>
                                                 <img src="icons/copy.gif" alt="" width={32} />
+                                            </div>
+                                            <div className='cursor-pointer' onClick={() => { togglePasswordVisibility(item.id); }}>
+                                                <img src={isPasswordVisible ? "icons/hidden.png" : "icons/eye.png"} alt="toggle visibility" width={24} />
                                             </div>
                                         </div>
                                     </td>
