@@ -14,7 +14,7 @@ const PasswordSchema = new Schema({
         type: String,
         required: true,
     },
-    URL: {
+    url: {
         type: String,
         default: "General"
     },
