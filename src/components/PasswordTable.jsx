@@ -3,6 +3,7 @@ import passwordContext from "../context/passwordContext";
 
 import toast from 'react-hot-toast';
 import formContext from '../context/formContext';
+import { useNavigate } from 'react-router-dom';
 
 
 const PasswordTable = () => {
@@ -11,6 +12,7 @@ const PasswordTable = () => {
     context = useContext(formContext);
     const { setForm } = context;
     const [visiblePasswords, setVisiblePasswords] = useState({});
+    let navigate = useNavigate();
 
     useEffect(() => {
         let passwords = localStorage.getItem("passwords");
@@ -39,7 +41,7 @@ const PasswordTable = () => {
         setForm(passwordArray.filter(item => item.id === id)[0]);
         // Removing the values from password array to avoid duplication
         setPasswordArray(passwordArray.filter(item => item.id !== id))
-        
+
     }
     const togglePasswordVisibility = (id) => {
         setVisiblePasswords(prevState => ({ ...prevState, [id]: !prevState[id] }));

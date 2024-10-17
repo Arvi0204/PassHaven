@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import toast from 'react-hot-toast'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
     const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -10,7 +10,7 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Here you would typically handle the login logic
         console.log('Login attempted with:', credentials);
 
@@ -95,6 +95,18 @@ export default function Login() {
                             </button>
                         </div>
                     </form>
+                    <div>
+                        <div className='mt-3 flex'>
+                            <Link
+                                to="/signup"
+                                role='button'
+                                className="mt-5 w-full text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-lg px-3 py-2 text-center"
+                            >
+                                Don't have an account? <span className='underline font-bold'>Sign Up now</span>
+                            </Link>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </>
