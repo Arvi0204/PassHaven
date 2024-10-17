@@ -7,12 +7,11 @@ import {
   Route
 } from "react-router-dom"
 import PasswordState from './context/PasswordState'
-import PasswordTable from './components/PasswordTable'
-import PasswordForm from './components/PasswordForm'
 import FormState from './context/FormState'
 import Login from './components/Login'
 import { Toaster } from 'react-hot-toast';
 import Signup from './components/Signup'
+import Home from "./components/Home"
 
 
 function App() {
@@ -50,10 +49,7 @@ function App() {
               <Navbar />
               <div className="flex-grow"> {/* This will take remaining space */}
                 <Routes>
-                  <Route exact path="/" element={<>
-                    <PasswordForm />
-                    <PasswordTable />
-                  </>} />
+                  <Route exact path="/" element={<Home/>} />
                   <Route exct path="/login" element={<Login />} />
                   <Route exct path="/signup" element={<Signup />} />
                 </Routes>
