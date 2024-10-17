@@ -41,20 +41,12 @@ const PasswordTable = () => {
     }
 
     const editPassword = (id) => {
-        // const edit = passwordArray.find(item => item.id === id);
-        // // Populating form values with existing values
-        // setForm(edit);
-        // setPasswordArray(passwordArray.filter(item => item.id !== id))
-        // // Removing the values from password array to avoid duplication
-        // // deletePass(id);
-
-        const passwordToEdit = passwordArray.find(item => item.id === id);
+        const passwordToEdit = passwordArray.find(item => item._id === id);
         if (passwordToEdit) {
             // Set the form data with the password to edit
             setForm(passwordToEdit);
             // Remove the item from the passwordArray
-            setPasswordArray(prevArray => prevArray.filter(item => item.id !== id));
-            toast.success("Editing password");
+            deletePass(id);
         }
         const editToast = toast.loading("Editing password")
         setTimeout(() => {
@@ -111,7 +103,7 @@ const PasswordTable = () => {
                                     </td>
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center gap-3">
-                                            <img className='cursor-pointer' src="icons/edit.gif" alt="" width={32} onClick={() => { editPassword(item.id) }} />
+                                            <img className='cursor-pointer' src="icons/edit.gif" alt="" width={32} onClick={() => { editPassword(item._id) }} />
                                             <img className='cursor-pointer' src="icons/trash-bin.gif" alt="" width={32} onClick={() => { deletePassword(item._id) }} />
                                         </div>
                                     </td>
