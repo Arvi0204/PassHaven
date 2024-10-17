@@ -8,17 +8,19 @@ const PasswordForm = () => {
     const passwordRef = useRef();
     const ref = useRef();
 
-    const pass = useContext(passwordContext);
-    const { passwordArray, setPasswordArray } = pass;
+    let context = useContext(passwordContext);
+    const { passwordArray, setPasswordArray, addPass } = context;
 
-    const f = useContext(formContext)
-    const {form, setForm} = f;
+    context = useContext(formContext)
+    const {form, setForm} = context;
 
     const savePassword = () => {
-        setPasswordArray([...passwordArray, { ...form, id: uuidv4() }])
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]))
+        // setPasswordArray([...passwordArray, { ...form, id: uuidv4() }])
+        // localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]))
+
+        addPass(form.url,form.username,form.password);
         toast.success("Password added successfully")
-        setForm({ site: "", username: "", password: "" })
+        setForm({ url: "", username: "", password: "" })
     };
 
     const showPassword = () => {
@@ -52,9 +54,9 @@ const PasswordForm = () => {
                     <input
                         className="rounded-full border border-blue-600 w-full px-4 py-1"
                         type="text"
-                        value={form.site}
-                        id="site"
-                        name="site"
+                        value={form.url}
+                        id="url"
+                        name="url"
                         onChange={onChange}
                         placeholder="Enter URL"
                     />
@@ -94,10 +96,10 @@ const PasswordForm = () => {
                         </div>
                     </div>
                     <button
-                        disabled={form.site === "" || form.username === "" || form.password === ""}
+                        disabled={form.url === "" || form.username === "" || form.password === ""}
                         onClick={savePassword}
                         className={`text-white flex justify-center items-center rounded-full w-fit gap-2 px-3 py-1 
-                            ${!form.site || !form.username || !form.password ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'}`}
+                            ${!form.url || !form.username || !form.password ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'}`}
                     >
                         <lord-icon
                             src="https://cdn.lordicon.com/jgnvfzqg.json"

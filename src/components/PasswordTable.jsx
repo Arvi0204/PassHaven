@@ -8,18 +8,23 @@ import { useNavigate } from 'react-router-dom';
 
 const PasswordTable = () => {
     let context = useContext(passwordContext);
-    const { passwordArray, setPasswordArray } = context;
+    const { passwordArray, setPasswordArray, getPasswords, deletePass } = context;
+
     context = useContext(formContext);
     const { setForm } = context;
     const [visiblePasswords, setVisiblePasswords] = useState({});
     let navigate = useNavigate();
 
     useEffect(() => {
-        let passwords = localStorage.getItem("passwords");
-        if (passwords) {
-            setPasswordArray(JSON.parse(passwords))
+        // let passwords = localStorage.getItem("passwords");
+        // if (passwords) {
+        //     setPasswordArray(JSON.parse(passwords))
+        // }
+        // else setPasswordArray([]);
+        if (!localStorage.getItem('token')) {
+            navigate('/login');
         }
-        else setPasswordArray([]);
+        else getPasswords()
     }, [])
 
     const copyText = (text, type) => {
@@ -31,16 +36,26 @@ const PasswordTable = () => {
     }
 
     const deletePassword = (id) => {
-        setPasswordArray(passwordArray.filter(item => item.id !== id))
-        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id !== id)))
+        deletePass(id);
         toast.success("Password deleted successfully")
     }
 
     const editPassword = (id) => {
-        // Populating form values with existing values
-        setForm(passwordArray.filter(item => item.id === id)[0]);
-        // Removing the values from password array to avoid duplication
-        setPasswordArray(passwordArray.filter(item => item.id !== id))
+        // const edit = passwordArray.find(item => item.id === id);
+        // // Populating form values with existing values
+        // setForm(edit);
+        // setPasswordArray(passwordArray.filter(item => item.id !== id))
+        // // Removing the values from password array to avoid duplication
+        // // deletePass(id);
+
+        const passwordToEdit = passwordArray.find(item => item.id === id);
+        if (passwordToEdit) {
+            // Set the form data with the password to edit
+            setForm(passwordToEdit);
+            // Remove the item from the passwordArray
+            setPasswordArray(prevArray => prevArray.filter(item => item.id !== id));
+            toast.success("Editing password");
+        }
         const editToast = toast.loading("Editing password")
         setTimeout(() => {
             toast.dismiss(editToast);
@@ -65,14 +80,14 @@ const PasswordTable = () => {
                         </tr>
                     </thead>
                     <tbody className="bg-blue-100">
-                        {passwordArray.map((item, index) => {
-                            const url = item.site.startsWith("http://") || item.site.startsWith("https://") ? item.site : `https://${item.site}`;
+                        {passwordArray.map((item) => {
+                            const url = item.url.startsWith("http://") || item.url.startsWith("https://") ? item.url : `https://${item.url}`;
                             const isPasswordVisible = visiblePasswords[item.id]; // Check if password is visible
                             return (
-                                <tr key={index}>
+                                <tr key={item._id}>
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center">
-                                            <a href={url} target="_blank">{item.site}</a>
+                                            <a href={url} target="_blank">{item.url}</a>
                                         </div>
                                     </td>
                                     <td className="py-2 border-2 border-black text-center">
@@ -85,8 +100,8 @@ const PasswordTable = () => {
                                     </td>
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center">
-                                            <span className='mr-10'>{isPasswordVisible ? item.password : '*'.repeat(item.password.length)}</span>
-                                            <div className='cursor-pointer mr-2' onClick={() => { copyText(item.password, "password") }}>
+                                            <span>{isPasswordVisible ? item.password : '*'.repeat(item.password.length)}</span>
+                                            <div className='cursor-pointer ml-5' onClick={() => { copyText(item.password, "password") }}>
                                                 <img src="icons/copy.gif" alt="" width={32} />
                                             </div>
                                             <div className='cursor-pointer' onClick={() => { togglePasswordVisibility(item.id); }}>
@@ -97,7 +112,7 @@ const PasswordTable = () => {
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center gap-3">
                                             <img className='cursor-pointer' src="icons/edit.gif" alt="" width={32} onClick={() => { editPassword(item.id) }} />
-                                            <img className='cursor-pointer' src="icons/trash-bin.gif" alt="" width={32} onClick={() => { deletePassword(item.id) }} />
+                                            <img className='cursor-pointer' src="icons/trash-bin.gif" alt="" width={32} onClick={() => { deletePassword(item._id) }} />
                                         </div>
                                     </td>
                                 </tr>
