@@ -35,13 +35,16 @@ const PasswordTable = () => {
         localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item => item.id !== id)))
         toast.success("Password deleted successfully")
     }
+
     const editPassword = (id) => {
-        console.log("Editing password with id " + id)
         // Populating form values with existing values
         setForm(passwordArray.filter(item => item.id === id)[0]);
         // Removing the values from password array to avoid duplication
         setPasswordArray(passwordArray.filter(item => item.id !== id))
-
+        const editToast = toast.loading("Editing password")
+        setTimeout(() => {
+            toast.dismiss(editToast);
+        }, 1500);
     }
     const togglePasswordVisibility = (id) => {
         setVisiblePasswords(prevState => ({ ...prevState, [id]: !prevState[id] }));

@@ -23,7 +23,7 @@ function App() {
         <FormState>
           <Router>
             <Toaster
-              position="bottom-right"
+              position="top-right"
               reverseOrder={true}
               gutter={8}
               toastOptions={{

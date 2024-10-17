@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useNavigate } from "react-router-dom"
 
 const Navbar = () => {
+  let navigate = useNavigate();
   const handleLogOut = () => {
     localStorage.removeItem('token')
     navigate('/login')
