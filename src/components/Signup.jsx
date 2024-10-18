@@ -27,7 +27,7 @@ export default function Signup() {
             const json = await response.json();
             if (json.success) {
                 sessionStorage.setItem('token', json.authToken);
-                navigate("/login");
+                navigate("/");
                 toast.success("Created account successfully")
             }
             else toast.error(json.message || "Invalid credentials")

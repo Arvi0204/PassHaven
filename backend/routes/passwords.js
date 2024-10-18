@@ -16,16 +16,9 @@ router.get('/fetchallpass', fetchUser, async (req, res) => {
 })
 // ROUTE 2 = Add passwords: POST "/api/notes/addpass". login required
 router.post('/addpass', fetchUser, [
-    body('url', 'Enter a valid URL').isLength({ min: 3 }),
-    body('username', 'Enter a valid username').isLength({ min: 3 }),
-    body('password', 'Description must be at least 5 characters"').isLength({ min: 3 }),
 ], async (req, res) => {
     try {
         const { url, username, password } = req.body;
-        // If there are errors, return error and Bad request
-        const errors = validationResult(req);
-        if (!errors.isEmpty())
-            return res.status(400).json({ errors: errors.array() });
 
         const pass = new Passwords({
             url, username, password, user: req.user.id
