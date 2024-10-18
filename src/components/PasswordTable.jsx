@@ -74,7 +74,7 @@ const PasswordTable = () => {
                     <tbody className="bg-blue-100">
                         {passwordArray.map((item) => {
                             const url = item.url.startsWith("http://") || item.url.startsWith("https://") ? item.url : `https://${item.url}`;
-                            const isPasswordVisible = visiblePasswords[item.id]; // Check if password is visible
+                            const isPasswordVisible = visiblePasswords[item._id]; // Check if password is visible
                             return (
                                 <tr key={item._id}>
                                     <td className="py-2 border-2 border-black text-center">
@@ -96,7 +96,7 @@ const PasswordTable = () => {
                                             <div className='cursor-pointer ml-5' onClick={() => { copyText(item.password, "password") }}>
                                                 <img src="icons/copy.gif" alt="" width={32} />
                                             </div>
-                                            <div className='cursor-pointer' onClick={() => { togglePasswordVisibility(item.id); }}>
+                                            <div className='cursor-pointer' onClick={() => { togglePasswordVisibility(item._id); }}>
                                                 <img src={isPasswordVisible ? "icons/hidden.png" : "icons/eye.png"} alt="toggle visibility" width={24} />
                                             </div>
                                         </div>
