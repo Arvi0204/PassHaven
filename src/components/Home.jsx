@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
     let navigate = useNavigate();
-    
+
     useEffect(() => {
-        if (!localStorage.getItem('token')) {
+        if (!sessionStorage.getItem('token')) {
             navigate('/login');
         }
     }, [])

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 const Navbar = () => {
   let navigate = useNavigate();
   const handleLogOut = () => {
-    localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
     navigate('/login')
   }
 
@@ -16,7 +16,7 @@ const Navbar = () => {
           Pass
           <span className='text-blue-500'>Haven/&gt;</span>
         </div>
-        {!localStorage.getItem('token') ? "" :
+        {!sessionStorage.getItem('token') ? "" :
           <ul>
             <li className='flex gap-3'>
               <Link className='hover:font-bold' to="/">Home</Link>
@@ -24,7 +24,7 @@ const Navbar = () => {
               <Link className='hover:font-bold' to="/about">About PassHaven</Link>
             </li>
           </ul>}
-        {!localStorage.getItem('token') ? "" :
+        {!sessionStorage.getItem('token') ? "" :
           <button onClick={handleLogOut} type="button" className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2 text-center">Logout</button>}
         {/* <button className="text-white bg-blue-700 rounded-full my-5 flex gap-3 px-2 py-1 justify-between items-center" onClick={redirect}>
           <img src="icons/github-mark-white.png" width={24} alt="github logo" />

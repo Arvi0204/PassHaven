@@ -13,7 +13,7 @@ const PasswordState = (props) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'auth-token': localStorage.getItem('token')
+                    'auth-token': sessionStorage.getItem('token')
                 }
             });
             const json = await response.json();
@@ -32,7 +32,7 @@ const PasswordState = (props) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'auth-token': localStorage.getItem('token')
+                'auth-token': sessionStorage.getItem('token')
             },
             body: JSON.stringify({ url, username, password })
         });
@@ -48,7 +48,7 @@ const PasswordState = (props) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'auth-token': localStorage.getItem('token')
+                'auth-token': sessionStorage.getItem('token')
             },
             body: JSON.stringify({ title, description, tag })
         });
@@ -68,7 +68,7 @@ const PasswordState = (props) => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'auth-token': localStorage.getItem('token')
+                'auth-token': sessionStorage.getItem('token')
             },
             body: JSON.stringify({ id })
         });

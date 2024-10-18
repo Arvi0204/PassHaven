@@ -21,7 +21,7 @@ const PasswordTable = () => {
         //     setPasswordArray(JSON.parse(passwords))
         // }
         // else setPasswordArray([]);
-        if (!localStorage.getItem('token')) {
+        if (!sessionStorage.getItem('token')) {
             navigate('/login');
         }
         else getPasswords()
