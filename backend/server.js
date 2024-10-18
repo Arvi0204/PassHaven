@@ -1,8 +1,10 @@
-const connectToMongo = require("./db");
 const express = require('express');
 const cors = require('cors')
 
-connectToMongo();
+const mongoose = require('mongoose');
+const mongoURI = "mongodb://localhost:27017/PassHaven?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
+
+mongoose.connect(mongoURI);
 const app = express();
 const port = 2000
 

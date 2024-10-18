@@ -17,8 +17,5 @@
     "expressjs-validator": "^1.0.7",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.7"
   }
 }
