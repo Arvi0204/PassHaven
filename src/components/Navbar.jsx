@@ -20,7 +20,7 @@ const Navbar = () => {
           <ul>
             <li className='flex gap-3'>
               <Link className='hover:font-bold' to="/">Home</Link>
-              <Link className='hover:font-bold' to="/genrator">Generator</Link>
+              <Link className='hover:font-bold' to="/generator">Generator</Link>
               <Link className='hover:font-bold' to="/about">About PassHaven</Link>
             </li>
           </ul>}
