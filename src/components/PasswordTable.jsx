@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const PasswordTable = () => {
     let context = useContext(passwordContext);
-    const { passwordArray, setPasswordArray, getPasswords, deletePass } = context;
+    const { passwordArray, getPasswords, deletePass } = context;
     context = useContext(formContext);
     const { setForm } = context;
     const [visiblePasswords, setVisiblePasswords] = useState({});
@@ -19,7 +19,7 @@ const PasswordTable = () => {
             navigate('/login');
         }
         else getPasswords()
-    }, [])
+    }, [passwordArray])
 
     const copyText = (text, type) => {
         navigator.clipboard.writeText(text);
@@ -69,7 +69,6 @@ const PasswordTable = () => {
                         {passwordArray.map((item) => {
                             const url = item.url.startsWith("http://") || item.url.startsWith("https://") ? item.url : `https://${item.url}`;
                             const isPasswordVisible = visiblePasswords[item._id]; // Check if password is visible
-                            const decryptedPassword = decryptPassword(item.password, item.iv)
 
                             return (
                                 <tr key={item._id}>
@@ -88,7 +87,7 @@ const PasswordTable = () => {
                                     </td>
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center">
-                                            <span>{isPasswordVisible ? decryptedPassword : '*'.repeat(decryptedPassword.length)}</span>
+                                            <span>{isPasswordVisible ? item.password : '*'.repeat(item.password.length)}</span>
                                             <div className='cursor-pointer ml-5' onClick={() => { copyText(item.password, "password") }}>
                                                 <img src="icons/copy.gif" alt="" width={32} />
                                             </div>

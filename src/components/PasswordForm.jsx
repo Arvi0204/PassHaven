@@ -8,16 +8,13 @@ const PasswordForm = () => {
     const ref = useRef();
 
     let context = useContext(passwordContext);
-    const { passwordArray, setPasswordArray, addPass } = context;
+    const { addPass } = context;
 
     context = useContext(formContext)
-    const {form, setForm} = context;
+    const { form, setForm } = context;
 
     const savePassword = () => {
-        // setPasswordArray([...passwordArray, { ...form, id: uuidv4() }])
-        // localStorage.setItem("passwords", JSON.stringify([...passwordArray, { ...form, id: uuidv4() }]))
-
-        addPass(form.url,form.username,form.password);
+        addPass(form.url, form.username, form.password);
         toast.success("Password added successfully")
         setForm({ url: "", username: "", password: "" })
     };
