@@ -9,18 +9,12 @@ import { useNavigate } from 'react-router-dom';
 const PasswordTable = () => {
     let context = useContext(passwordContext);
     const { passwordArray, setPasswordArray, getPasswords, deletePass } = context;
-
     context = useContext(formContext);
     const { setForm } = context;
     const [visiblePasswords, setVisiblePasswords] = useState({});
     let navigate = useNavigate();
 
     useEffect(() => {
-        // let passwords = localStorage.getItem("passwords");
-        // if (passwords) {
-        //     setPasswordArray(JSON.parse(passwords))
-        // }
-        // else setPasswordArray([]);
         if (!sessionStorage.getItem('token')) {
             navigate('/login');
         }
@@ -75,6 +69,8 @@ const PasswordTable = () => {
                         {passwordArray.map((item) => {
                             const url = item.url.startsWith("http://") || item.url.startsWith("https://") ? item.url : `https://${item.url}`;
                             const isPasswordVisible = visiblePasswords[item._id]; // Check if password is visible
+                            const decryptedPassword = decryptPassword(item.password, item.iv)
+
                             return (
                                 <tr key={item._id}>
                                     <td className="py-2 border-2 border-black text-center">
@@ -92,7 +88,7 @@ const PasswordTable = () => {
                                     </td>
                                     <td className="py-2 border-2 border-black text-center">
                                         <div className="flex justify-center items-center">
-                                            <span>{isPasswordVisible ? item.password : '*'.repeat(item.password.length)}</span>
+                                            <span>{isPasswordVisible ? decryptedPassword : '*'.repeat(decryptedPassword.length)}</span>
                                             <div className='cursor-pointer ml-5' onClick={() => { copyText(item.password, "password") }}>
                                                 <img src="icons/copy.gif" alt="" width={32} />
                                             </div>

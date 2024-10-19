@@ -2,7 +2,6 @@ import React, { useRef, useContext, useEffect } from "react";
 import passwordContext from "../context/passwordContext";
 import formContext from "../context/formContext";
 import toast from 'react-hot-toast';
-import { v4 as uuidv4 } from 'uuid';
 
 const PasswordForm = () => {
     const passwordRef = useRef();
@@ -69,6 +68,7 @@ const PasswordForm = () => {
                             name="username"
                             onChange={onChange}
                             placeholder="Enter username"
+                            autoComplete="email"
                         />
                         <div className="relative flex-grow">
                             <input
@@ -80,6 +80,7 @@ const PasswordForm = () => {
                                 name="password"
                                 onChange={onChange}
                                 placeholder="Enter password"
+                                autoComplete="new-password"
                             />
                             <span
                                 className="absolute right-2 top-1 cursor-pointer"

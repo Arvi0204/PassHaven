@@ -3,6 +3,7 @@ const router = express.Router();
 const fetchUser = require('../middleware/fetchUser');
 const { ObjectId } = require('mongodb');
 const connectToDb = require('../server'); // Import connectToDb function
+const { encrypt, decrypt } = require('../utils/encryption'); // Import the encryption/decryption functions
 
 // Helper function to get the passwords collection
 const getPasswordsCollection = async () => {
@@ -16,7 +17,17 @@ router.get('/fetchallpass', fetchUser, async (req, res) => {
     try {
         const passwordsCollection = await getPasswordsCollection();
         const passwords = await passwordsCollection.find({ user: new ObjectId(req.user.id) }).toArray();
-        res.send(passwords);
+
+        if (passwords.length===0)
+            return res.send("No passwords to display")
+
+        // Decrypt the passwords before sending to the client
+        const decryptedPasswords = passwords.map(pass => ({
+            ...pass,
+            password: decrypt({ iv: pass.iv, encryptedData: pass.password })
+        }));
+
+        res.send(decryptedPasswords);
     } catch (error) {
         console.log(error.message);
         res.status(500).send("Internal Server Error");
@@ -29,10 +40,13 @@ router.post('/addpass', fetchUser, async (req, res) => {
         const { url, username, password } = req.body;
         const passwordsCollection = await getPasswordsCollection();
 
+        const { iv, encryptedData } = encrypt(password);
+
         const pass = {
             url,
             username,
-            password: password, // Store the encrypted password
+            password: encryptedData, // Store the encrypted password
+            iv: iv.toString('hex'),
             user: new ObjectId(req.user.id)
         };
 
@@ -50,16 +64,13 @@ router.put('/updatepass/:id', fetchUser, async (req, res) => {
         const { url, username, password } = req.body;
         const passwordsCollection = await getPasswordsCollection();
 
+        
         const newPass = {};
         if (url) newPass.url = url;
         if (username) newPass.username = username;
-
-        // Encrypt the new password if it's provided
-        if (password) {
-            const { iv, encryptedData } = encrypt(password);
-            newPass.password = encryptedData; // Store the encrypted password
-            newPass.iv = iv; // Store the new initialization vector
-        }
+        const { iv, encryptedData } = encrypt(password);
+        newPass.iv = iv;
+        newPass.password = encryptedData
 
         // Find the password to be updated
         const pass = await passwordsCollection.findOne({ _id: new ObjectId(req.params.id) });
