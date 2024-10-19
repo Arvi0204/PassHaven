@@ -12,8 +12,6 @@ export default function Login() {
         e.preventDefault();
 
         // Here you would typically handle the login logic
-        console.log('Login attempted with:', credentials);
-
         const response = await fetch(`http://localhost:2000/api/auth/login`, {
             method: 'POST',
             headers: {

@@ -8,7 +8,6 @@ const algorithm = 'aes-256-cbc';
 
 // Use a fixed key (32 bytes for aes-256)
 const key = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
-console.log(key); // Use an environment variable
 const ivLength = 16; // For aes, this is always 16
 
 // Encrypt the password

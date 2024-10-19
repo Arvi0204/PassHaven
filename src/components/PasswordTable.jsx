@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react'
-import passwordContext from "../context/passwordContext";
+import PasswordContext from "../context/passwordContext";
 
 import toast from 'react-hot-toast';
 import formContext from '../context/formContext';
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const PasswordTable = () => {
-    let context = useContext(passwordContext);
+    let context = useContext(PasswordContext);
     const { passwordArray, getPasswords, deletePass } = context;
     context = useContext(formContext);
     const { setForm } = context;

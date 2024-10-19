@@ -1,11 +1,15 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import { Link, useNavigate } from "react-router-dom"
+import PasswordContext from "../context/passwordContext";
 
 const Navbar = () => {
+  let context = useContext(PasswordContext);
+  const { setPasswordArray} = context;
   let navigate = useNavigate();
   const handleLogOut = () => {
-    sessionStorage.removeItem('token')
-    navigate('/login')
+    sessionStorage.removeItem('token');
+    setPasswordArray([]);
+    navigate('/login');
   }
 
   return (
