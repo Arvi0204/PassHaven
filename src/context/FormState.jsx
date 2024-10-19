@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import FormContext from "./formContext";
 
 const FormState = (props)=>{
-    const formInitial = { site: "", username: "", password: "" };
+    const formInitial = { url: "", username: "", password: "" };
     const [form, setForm] = useState(formInitial);
 
     return (

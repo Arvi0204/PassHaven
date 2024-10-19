@@ -50,7 +50,7 @@ const PasswordState = (props) => {
                 'Content-Type': 'application/json',
                 'auth-token': sessionStorage.getItem('token')
             },
-            body: JSON.stringify({ title, description, tag })
+            body: JSON.stringify({ url, username, password })
         });
         const json = await response.json();
 
