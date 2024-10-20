@@ -30,10 +30,18 @@ const Navbar = () => {
           </div>
           <ul>
             {!sessionStorage.getItem("token") ? (
-              <li className="flex gap-3">
-                <Link className="hover:font-bold" to="/home">
-                  Home
-                </Link>
+              <li>
+                <div className="">
+                  <Link className="flex gap-3 hover:font-bold" to="/home">
+                    <lord-icon
+                      src="https://cdn.lordicon.com/wmwqvixz.json"
+                      trigger="hover"
+                      state="hover-home-1"
+                      style={{ "width": "25px", "height": "25px", "filter": "invert(1)" }}>
+                    </lord-icon>
+                    Home
+                  </Link>
+                </div>
               </li>
             ) : (
               <li className="flex gap-3">
@@ -44,7 +52,7 @@ const Navbar = () => {
                   Generator
                 </Link>
                 <Link className="hover:font-bold" to="/about">
-                  About PassHaven
+                  FAQ's
                 </Link>
               </li>
             )}
