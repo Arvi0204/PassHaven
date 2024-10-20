@@ -4,7 +4,9 @@ const Home = () => {
     return (
         <div className="flex flex-col items-center justify-center p-8">
             <h1 className="text-4xl font-bold text-blue-700 mb-4 text-center max-w-2xl">
-                Welcome to PassHaven
+                Welcome to <span className="text-black">&lt;</span>
+                <span className='text-blue-700'>Pass</span>
+                <span className="text-black">Haven/&gt;</span>
             </h1>
             <p className="text-lg text-gray-700 mb-8 text-center max-w-2xl">
                 PassHaven is a secure password manager that helps you store and manage your passwords safely.

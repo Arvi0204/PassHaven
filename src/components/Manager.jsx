@@ -8,7 +8,7 @@ const Manager = () => {
 
     useEffect(() => {
         if (!sessionStorage.getItem('token')) {
-            navigate('/login');
+            navigate('/home');
         }
     }, [])
   return (

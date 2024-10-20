@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import PasswordContext from "./passwordContext";
 
 const PasswordState = (props) => {
-    const host = "https://pass-haven-backend.vercel.app"
+    const host = "http://localhost:2000"
     const passwordInitial = []
     const [passwordArray, setPasswordArray] = useState(passwordInitial);
 

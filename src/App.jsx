@@ -50,10 +50,10 @@ function App() {
               <Navbar />
               <div className="flex-grow"> {/* This will take remaining space */}
                 <Routes>
-                  <Route exact path="/" element={<Manager />} />
                   <Route exct path="/home" element={<Home />} />
                   <Route exct path="/login" element={<Login />} />
                   <Route exct path="/signup" element={<Signup />} />
+                  <Route exact path="/" element={<Manager />} />
                 </Routes>
               </div>
               <Footer />

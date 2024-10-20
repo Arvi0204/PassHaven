@@ -12,7 +12,7 @@ export default function Login() {
         e.preventDefault();
 
         // Here you would typically handle the login logic
-        const response = await fetch(`https://pass-haven-backend.vercel.app/api/auth/login`, {
+        const response = await fetch(`http://localhost:2000/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
