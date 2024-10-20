@@ -7,10 +7,14 @@ import { useNavigate } from 'react-router-dom';
 
 
 const PasswordTable = () => {
+    // Contet to access Password state 
     let context = useContext(PasswordContext);
     const { passwordArray, getPasswords, deletePass } = context;
+    // Contet to access Form state 
     context = useContext(formContext);
     const { setForm } = context;
+
+    // State to toggle visibility of each password entry in table
     const [visiblePasswords, setVisiblePasswords] = useState({});
     let navigate = useNavigate();
 
