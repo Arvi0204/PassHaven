@@ -23,7 +23,7 @@ const PasswordTable = () => {
             navigate('/login');
         }
         else getPasswords()
-    }, [passwordArray])
+    }, [])
 
     const copyText = (text, type) => {
         navigator.clipboard.writeText(text);

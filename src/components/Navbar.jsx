@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast"
+import passwordContext from "../context/passwordContext";
 
 const Navbar = () => {
+  let context = useContext(passwordContext)
+  let { setPasswordArray } = context;
   let navigate = useNavigate();
 
   // State to manage modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const confirmLogout = () => {
+  const confirmLogout = async () => {
+    await setPasswordArray([]);
     sessionStorage.removeItem("token");
     navigate("/login");
     toast.success("Logged out successfully!!!")
@@ -17,20 +21,24 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-slate-800 text-white">
+      <nav className="bg-slate-800 text-white sticky top-0">
         <div className="container flex justify-between items-center px-4 py-6 h-11 mx-auto">
           <div className="logo font-bold text-2xl">
             <span className="text-blue-500">&lt;</span>
             Pass
             <span className="text-blue-500">Haven/&gt;</span>
           </div>
-          {!sessionStorage.getItem("token") ? (
-            ""
-          ) : (
-            <ul>
+          <ul>
+            {!sessionStorage.getItem("token") ? (
+              <li className="flex gap-3">
+                <Link className="hover:font-bold" to="/home">
+                  Home
+                </Link>
+              </li>
+            ) : (
               <li className="flex gap-3">
                 <Link className="hover:font-bold" to="/">
-                  Home
+                  Passwords
                 </Link>
                 <Link className="hover:font-bold" to="/generator">
                   Generator
@@ -39,10 +47,25 @@ const Navbar = () => {
                   About PassHaven
                 </Link>
               </li>
-            </ul>
-          )}
+            )}
+          </ul>
           {!sessionStorage.getItem("token") ? (
-            ""
+            <div className="flex gap-3">
+              <Link
+                to="/login"
+                type="button"
+                className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2 text-center"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                type="button"
+                className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2 text-center"
+              >
+                Sign Up
+              </Link>
+            </div>
           ) : (
             <button
               onClick={() => {

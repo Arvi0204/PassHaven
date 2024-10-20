@@ -9,9 +9,10 @@ import {
 import PasswordState from './context/PasswordState'
 import FormState from './context/FormState'
 import Login from './components/Login'
-import { Toaster } from 'react-hot-toast';
 import Signup from './components/Signup'
-import Home from "./components/Home"
+import Manager from './components/Manager'
+import { Toaster } from 'react-hot-toast';
+import Home from './components/Home'
 
 
 function App() {
@@ -49,7 +50,8 @@ function App() {
               <Navbar />
               <div className="flex-grow"> {/* This will take remaining space */}
                 <Routes>
-                  <Route exact path="/" element={<Home/>} />
+                  <Route exact path="/" element={<Manager />} />
+                  <Route exct path="/home" element={<Home />} />
                   <Route exct path="/login" element={<Login />} />
                   <Route exct path="/signup" element={<Signup />} />
                 </Routes>

@@ -8,15 +8,16 @@ const PasswordForm = () => {
     const ref = useRef();
 
     let context = useContext(passwordContext);
-    const { addPass } = context;
+    const { addPass, getPasswords } = context;
 
     context = useContext(formContext)
     const { form, setForm } = context;
 
-    const savePassword = () => {
-        addPass(form.url, form.username, form.password);
+    const savePassword = async () => {
+        await addPass(form.url, form.username, form.password);
         toast.success("Password added successfully")
         setForm({ url: "", username: "", password: "" })
+        getPasswords();
     };
 
     const showPassword = () => {
