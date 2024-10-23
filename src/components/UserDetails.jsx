@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import ConfirmationModal from './ConfirmationModal';
 
 export default function UserDetails() {
     const [user, setUser] = useState({
@@ -10,11 +11,16 @@ export default function UserDetails() {
         createdAt: "",
         lastLogin: ""
     });
+    // Password states
     const [updatedPassword, setUpdatedPassword] = useState({ newPassword: "", confirmNewPassword: "" });
     const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const token = localStorage.getItem("token");
-    const naviagte = useNavigate();
+    // Modal states
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -59,8 +65,7 @@ export default function UserDetails() {
             if (response.ok) {
                 toast.success("Password changed successfully!");
                 setUpdatedPassword({ newPassword: "", confirmNewPassword: "" });
-                naviagte("/login")
-                toast.custom(<div>Please login again</div>);
+                navigate("/login")
             } else {
                 toast.error("Failed to change password");
             }
@@ -72,6 +77,62 @@ export default function UserDetails() {
     const onChange = (e) => {
         setUpdatedPassword({ ...updatedPassword, [e.target.name]: e.target.value })
     }
+
+    const openConfirmModal = (actionType) => {
+        if (actionType === 'passwords') {
+            setConfirmMessage("Are you sure you want to delete all passwords?");
+            setConfirmAction(() => deleteAllPasswords);
+        } else if (actionType === 'account') {
+            setConfirmMessage("Are you sure you want to delete your account?");
+            setConfirmAction(() => deleteAccount);
+        }
+        setIsConfirmModalOpen(true);
+    };
+
+    const deleteAllPasswords = async () => {
+        try {
+            const response = await fetch('http://localhost:2000/api/passwords/deleteallpass', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': token
+                },
+            });
+            const json = await response.json()
+
+            if (json.success) {
+                toast.success(json.message);
+                setIsConfirmModalOpen(false);
+                navigate("/")
+            }
+        } catch (error) {
+            toast.error("An error occurred, please try again.");
+        }
+        setIsConfirmModalOpen(false);
+    };
+
+    const deleteAccount = async () => {
+        try {
+            const response = await fetch('http://localhost:2000/api/auth/deleteuser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': token
+                },
+            });
+            const json = await response.json()
+
+            if (json.success) {
+                toast.success(json.message);
+                localStorage.removeItem('token');
+                setIsConfirmModalOpen(false);
+                navigate("/home")
+            }
+        } catch (error) {
+            toast.error("An error occurred, please try again.");
+        }
+    };
+
 
     return (
         <>
@@ -152,7 +213,7 @@ export default function UserDetails() {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className="w-full text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                             >
                                 Update Password
                             </button>
@@ -160,6 +221,35 @@ export default function UserDetails() {
                     </form>
                 </div>
             </div>
+
+            {/* Danger Zone Section */}
+            <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md m-auto mt-10">
+                <h2 className="text-center text-2xl font-bold text-red-600 mb-4">Danger Zone</h2>
+                <p className="text-gray-600 mb-6">Please proceed with caution. These actions are irreversible.</p>
+
+                <div className="space-y-4">
+                    <button
+                        onClick={() => openConfirmModal('passwords')}
+                        className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                        Delete All Passwords
+                    </button>
+                    <button
+                        onClick={() => openConfirmModal('account')}
+                        className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+            {/* Confirmation Modal */}
+            <ConfirmationModal
+                isOpen={isConfirmModalOpen}
+                onClose={() => setIsConfirmModalOpen(false)}
+                onConfirm={confirmAction}
+                message={confirmMessage}
+                confirmText="Yes, I'm sure"
+            />
         </>
     );
 }

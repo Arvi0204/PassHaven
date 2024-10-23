@@ -84,7 +84,7 @@ router.post('/login', [
         // Find the user by email
         let user = await db.collection('users').findOne({ email });
         if (!user) {
-            return res.status(400).json({ success, error: "Please login with valid credentials" });
+            return res.status(400).json({ success, error: "User does not exist" });
         }
 
         // Compare the provided password with the hashed password stored in the database
@@ -128,6 +128,7 @@ router.post('/getuser', fetchUser, async (req, res) => {
     }
 });
 
+// ROUTE 4 = Change password for user. POST /api/auth/changepassword
 router.post('/changepassword', fetchUser, [
     body('newPassword', 'New password cannot be blank').exists()
 ], async (req, res) => {
@@ -158,5 +159,22 @@ router.post('/changepassword', fetchUser, [
     }
 });
 
+// ROUTE 5 = Deleting user. POST /api/auth/deleteuser
+router.post('/deleteuser', fetchUser, async (req, res) => {
+    try {
+        const userId = req.user.id; // Get the user ID from the request object set by the middleware
+        const db = await connectToDb();
 
+        // Delete associated passwords
+        await db.collection('passwords').deleteMany({ user: new ObjectId(userId) });
+
+        // Delete user
+        await db.collection('users').deleteOne({ _id: new ObjectId(userId) }); 
+
+        return res.status(200).json({ success: true, message: 'User and associated passwords deleted successfully.' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
 module.exports = router;

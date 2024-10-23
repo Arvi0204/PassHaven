@@ -119,4 +119,20 @@ router.delete('/deletepass/:id', fetchUser, async (req, res) => {
     }
 });
 
+// ROUTE 5 = Delete ALL existing passwords: DELETE "/api/passwords/deleteallpass". login required
+router.delete('/deleteallpass', fetchUser, async (req, res) => {
+    try {
+        const userId = req.user.id; // Get the user ID from the request object set by the middleware
+        const db = await connectToDb();
+
+        // Delete associated passwords
+        await db.collection('passwords').deleteMany({ user: new ObjectId(userId) });
+
+        return res.status(200).json({ success: true, message: 'All passwords deleted successfully.' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 module.exports = router;

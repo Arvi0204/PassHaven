@@ -27,7 +27,7 @@ export default function Login() {
                 navigate("/");
                 toast.success("Logged in successfully");
             } else {
-                toast.error("Invalid credentials");
+                toast.error(json.error);
             }
         } catch (error) {
             console.error("Error logging in:", error);
