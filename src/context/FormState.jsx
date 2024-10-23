@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import FormContext from "./formContext";
 
 const FormState = (props)=>{
-    const formInitial = { url: "", username: "", password: "" };
-    const [form, setForm] = useState(formInitial);
+    const [form, setForm] = useState({ url: "", username: "", password: "" });
 
     return (
         // Using Context API and passing value of state and update function to all components that will use the Context API
