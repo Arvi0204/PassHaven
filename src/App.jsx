@@ -13,6 +13,7 @@ import Signup from './components/Signup'
 import Manager from './components/Manager'
 import { Toaster } from 'react-hot-toast';
 import Home from './components/Home'
+import UserDetails from './components/UserDetails'
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
                   <Route exct path="/login" element={<Login />} />
                   <Route exct path="/signup" element={<Signup />} />
                   <Route exact path="/" element={<Manager />} />
+                  <Route exact path="/user" element={<UserDetails />} />
                 </Routes>
               </div>
               <Footer />

@@ -44,6 +44,7 @@ router.post('/createuser', [
             username: req.body.username,
             email: req.body.email,
             password: secPass,
+            createdAt: new Date() 
         });
 
         // Create JWT token
@@ -91,7 +92,10 @@ router.post('/login', [
         if (!passwordCompare) {
             return res.status(400).json({ success, error: "Please login with valid credentials" });
         }
-
+        await db.collection('users').updateOne(
+            { _id: user._id },
+            { $set: { lastLogin: new Date() } }
+        );
         // Create JWT token
         const payload = {
             user: {
@@ -113,9 +117,7 @@ router.post('/getuser', fetchUser, async (req, res) => {
         const db = await connectToDb();
 
         // Find the user by ID and exclude the password field
-        const userID = req.user.id;
-        const user = await db.collection('users').findOne({ _id: new ObjectId(userID) });
-
+        const user = await db.collection('users').findOne({ _id: new ObjectId(req.user.id) }, { projection: { password: 0 } });
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -125,5 +127,36 @@ router.post('/getuser', fetchUser, async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+router.post('/changepassword', fetchUser, [
+    body('newPassword', 'New password cannot be blank').exists()
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    const { newPassword } = req.body;
+
+    try {
+        const db = await connectToDb();
+
+        // Generate hash for the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        // Update user's password
+        await db.collection('users').findOneAndUpdate(
+            { _id: new ObjectId(req.user.id) },
+            { $set: { password: hashedPassword } },
+            { returnDocument: 'after' }
+        );
+
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 module.exports = router;

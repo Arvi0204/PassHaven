@@ -39,17 +39,32 @@ const Navbar = () => {
   );
 
   const renderNavLinks = () => (
-    <li className="flex gap-3">
-      <Link className="hover:font-bold" to="/">
+    <li className="flex gap-6">
+      <Link className="flex gap-2 items-center hover:font-bold" to="/">
+        <lord-icon
+          src="https://cdn.lordicon.com/fkaukecx.json"
+          trigger="hover"
+          style={{ "width": "25px", "height": "25px", "filter": "invert(1)" }}>
+        </lord-icon>
         Passwords
       </Link>
-      <span
-        className="hover:font-bold cursor-pointer"
+      <div
+        className="flex gap-2 items-center hover:font-bold cursor-pointer"
         onClick={() => setIsGeneratorModalOpen(true)}
       >
+        <lord-icon
+          src="https://cdn.lordicon.com/qnpnzlkk.json"
+          trigger="hover"
+          style={{ "width": "25px", "height": "25px", "filter": "invert(1)" }}>
+        </lord-icon>
         Generator
-      </span>
-      <Link className="hover:font-bold" to="/about">
+      </div>
+      <Link className="flex gap-2 items-center hover:font-bold" to="/about">
+        <lord-icon
+          src="https://cdn.lordicon.com/ojnjgkun.json"
+          trigger="hover"
+          style={{ "width": "25px", "height": "25px", "filter": "invert(1)" }}>
+        </lord-icon>
         FAQ's
       </Link>
     </li>
@@ -58,7 +73,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="bg-slate-800 text-white sticky top-0 z-10">
+      <nav className="bg-slate-800 text-white sticky top-0 z-10 h-12">
         <div className="container flex justify-between items-center px-4 py-6 h-11 mx-auto">
           <Link to='/home' className="logo font-bold text-2xl">
             <span className="text-blue-500">&lt;</span>
@@ -69,15 +84,28 @@ const Navbar = () => {
             {!token ? <></> : renderNavLinks()}
           </ul>
           {!token ? renderAuthLinks() : (
-            <button
-              onClick={() => {
-                setIsLogoutModalOpen(true);
-              }}
-              type="button"
-              className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2 text-center"
-            >
-              Logout
-            </button>
+            <>
+              <div className="flex gap-3 justify-center items-center">
+                <Link to="/user"
+                  className="flex items-center gap-3">
+                  <lord-icon
+                    src="https://cdn.lordicon.com/hrjifpbq.json"
+                    trigger="hover"
+                    style={{ "width": "25px", "height": "25px", "filter": "invert(1)" }}>
+                  </lord-icon>
+                  <span>Manage Account</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setIsLogoutModalOpen(true);
+                  }}
+                  type="button"
+                  className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2 text-center"
+                >
+                  Logout
+                </button>
+              </div>
+            </>
           )}
         </div>
       </nav>
