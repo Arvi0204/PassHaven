@@ -114,7 +114,7 @@ router.post('/getuser', fetchUser, async (req, res) => {
 
         // Find the user by ID and exclude the password field
         const userID = req.user.id;
-        const user = await db.collection('users').findOne({ _id: new ObjectId(userID) }, { projection: { password: 0 } });
+        const user = await db.collection('users').findOne({ _id: new ObjectId(userID) });
 
         if (!user) {
             return res.status(404).json({ error: "User not found" });
