@@ -21,7 +21,7 @@ export default function Login() {
         });
         const json = await response.json();
         if (json.success) {
-            sessionStorage.setItem('token', json.authToken);
+            localStorage.setItem('token', json.authToken);
             navigate("/");
             toast.success("Logged in successfully")
         }

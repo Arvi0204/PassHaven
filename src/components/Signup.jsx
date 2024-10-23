@@ -26,7 +26,7 @@ export default function Signup() {
             });
             const json = await response.json();
             if (json.success) {
-                sessionStorage.setItem('token', json.authToken);
+                localStorage.setItem('token', json.authToken);
                 navigate("/");
                 toast.success("Created account successfully")
             }
@@ -40,7 +40,7 @@ export default function Signup() {
 
     return (
         <>
-            <div className="flex-grow flex items-center justify-center p-4 m-10">
+            <div className="flex-grow flex items-center justify-center p-4 m-20">
                 <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
                     <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Create your account</h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
