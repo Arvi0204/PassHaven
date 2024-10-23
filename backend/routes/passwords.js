@@ -18,8 +18,8 @@ router.get('/fetchallpass', fetchUser, async (req, res) => {
         const passwordsCollection = await getPasswordsCollection();
         const passwords = await passwordsCollection.find({ user: new ObjectId(req.user.id) }).toArray();
 
-        if (passwords.length===0)
-            return res.send("No passwords to display")
+        if (passwords.length === 0)
+            return res.json([]);
 
         // Decrypt the passwords before sending to the client
         const decryptedPasswords = passwords.map(pass => ({
@@ -27,19 +27,18 @@ router.get('/fetchallpass', fetchUser, async (req, res) => {
             password: decrypt({ iv: pass.iv, encryptedData: pass.password })
         }));
 
-        res.send(decryptedPasswords);
+        res.json(decryptedPasswords);
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).send("Internal Server Error");
     }
 });
 
 // ROUTE 2 = Add passwords: POST "/api/passwords/addpass". login required
 router.post('/addpass', fetchUser, async (req, res) => {
+    const { url, username, password } = req.body;
     try {
-        const { url, username, password } = req.body;
         const passwordsCollection = await getPasswordsCollection();
-
         const { iv, encryptedData } = encrypt(password);
 
         const pass = {
@@ -50,27 +49,28 @@ router.post('/addpass', fetchUser, async (req, res) => {
             user: new ObjectId(req.user.id)
         };
 
-        const result = await passwordsCollection.insertOne(pass);
-        res.json(pass);
+        await passwordsCollection.insertOne(pass);
+        res.status(201).json(pass);
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).send("Internal Server Error");
     }
 });
 
 // ROUTE 3 = Update existing passwords: PUT "/api/passwords/updatepass/:id". login required
 router.put('/updatepass/:id', fetchUser, async (req, res) => {
+    const { url, username, password } = req.body;
     try {
-        const { url, username, password } = req.body;
         const passwordsCollection = await getPasswordsCollection();
 
-        
         const newPass = {};
         if (url) newPass.url = url;
         if (username) newPass.username = username;
-        const { iv, encryptedData } = encrypt(password);
-        newPass.iv = iv;
-        newPass.password = encryptedData
+        if (password) {
+            const { iv, encryptedData } = encrypt(password);
+            newPass.iv = iv;
+            newPass.password = encryptedData
+        }
 
         // Find the password to be updated
         const pass = await passwordsCollection.findOne({ _id: new ObjectId(req.params.id) });
@@ -91,7 +91,7 @@ router.put('/updatepass/:id', fetchUser, async (req, res) => {
 
         res.json(updatedPass);
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         res.status(500).send("Internal Server Error");
     }
 });
