@@ -17,7 +17,7 @@ export default function Signup() {
             setPasswordError("Passwords don't match");
         } else {
             setPasswordError('');
-            const response = await fetch(`http://lcoalhost:2000/api/auth/createuser`, {
+            const response = await fetch(`http://localhost:2000/api/auth/createuser`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

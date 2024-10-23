@@ -57,7 +57,7 @@ const PasswordTable = () => {
 
     return (
         <>
-            <div className="md:container md:mx-auto md:px-40">
+            <div className="md:container md:mx-auto md:px-40 px-20">
                 <h1 className="text-blue-600 font-bold text-3xl underline text-center py-5">Your Passwords</h1>
                 {passwordArray.length === 0 && <div> No Passwords to show </div>}
                 {passwordArray.length !== 0 && <table className="table-auto w-full overflow-hidden rounded-lg mx-auto">
