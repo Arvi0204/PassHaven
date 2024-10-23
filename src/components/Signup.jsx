@@ -19,6 +19,9 @@ export default function Signup() {
         if (form.password !== form.confirmPassword) {
             setPasswordError("Passwords don't match");
             return;
+        } else if (updatedPassword.newPassword.length < 8) {
+            setPasswordError("Password should be at least 8 characters long.");
+            return;
         } else {
             setPasswordError('');
         }

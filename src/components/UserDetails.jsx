@@ -11,43 +11,44 @@ export default function UserDetails() {
         createdAt: "",
         lastLogin: ""
     });
-    // Password states
     const [updatedPassword, setUpdatedPassword] = useState({ newPassword: "", confirmNewPassword: "" });
     const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
+    const [modalState, setModalState] = useState({ isOpen: false, message: "", action: null });
     const token = localStorage.getItem("token");
-    // Modal states
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const [confirmMessage, setConfirmMessage] = useState("");
-    const [confirmAction, setConfirmAction] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchUserDetails = async () => {
-            try {
-                const response = await fetch('http://localhost:2000/api/auth/getuser', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'auth-token': token
-                    }
-                });
-                const data = await response.json();
-                setUser(data);
-            } catch (error) {
-                toast.error("Failed to fetch user details");
-            }
-        };
-
         if (token) {
             fetchUserDetails();
         }
     }, [token]);
+    const fetchUserDetails = async () => {
+        try {
+            const response = await fetch('http://localhost:2000/api/auth/getuser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'auth-token': token
+                }
+            });
+            const data = await response.json();
+            setUser(data);
+        } catch (error) {
+            toast.error("Failed to fetch user details");
+        }
+    };
+    const onChange = (e) => {
+        setUpdatedPassword({ ...updatedPassword, [e.target.name]: e.target.value })
+    }
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
         if (updatedPassword.newPassword !== updatedPassword.confirmNewPassword) {
             setPasswordError("Passwords don't match");
+            return;
+        } else if (updatedPassword.newPassword.length < 8) {
+            setPasswordError("Password should be at least 8 characters long.");
             return;
         } else {
             setPasswordError('');
@@ -66,27 +67,35 @@ export default function UserDetails() {
                 toast.success("Password changed successfully!");
                 setUpdatedPassword({ newPassword: "", confirmNewPassword: "" });
                 navigate("/login")
-            } else {
-                toast.error("Failed to change password");
             }
         } catch (error) {
             toast.error("An error occurred, please try again.");
         }
     };
 
-    const onChange = (e) => {
-        setUpdatedPassword({ ...updatedPassword, [e.target.name]: e.target.value })
-    }
 
     const openConfirmModal = (actionType) => {
         if (actionType === 'passwords') {
-            setConfirmMessage("Are you sure you want to delete all passwords?");
-            setConfirmAction(() => deleteAllPasswords);
+            setModalState({
+                isOpen: true,
+                message: (
+                    <>
+                    Are you sure you want to delete all your passwords? <br/> They can NOT be recovered
+                    </>
+                ),
+                action: deleteAllPasswords
+            });
         } else if (actionType === 'account') {
-            setConfirmMessage("Are you sure you want to delete your account?");
-            setConfirmAction(() => deleteAccount);
+            setModalState({
+                isOpen: true,
+                message: (
+                    <>
+                    Are you sure you want to delete your account? <br/> It can NOT be recovered
+                    </>
+                ),
+                action: deleteAccount
+            });
         }
-        setIsConfirmModalOpen(true);
     };
 
     const deleteAllPasswords = async () => {
@@ -102,13 +111,13 @@ export default function UserDetails() {
 
             if (json.success) {
                 toast.success(json.message);
-                setIsConfirmModalOpen(false);
+                setModalState({ ...modalState, isOpen: false });
                 navigate("/")
             }
         } catch (error) {
-            toast.error("An error occurred, please try again.");
+            setModalState({ ...modalState, isOpen: false });
+            toast.error("An error occurred, please try again later.");
         }
-        setIsConfirmModalOpen(false);
     };
 
     const deleteAccount = async () => {
@@ -125,11 +134,12 @@ export default function UserDetails() {
             if (json.success) {
                 toast.success(json.message);
                 localStorage.removeItem('token');
-                setIsConfirmModalOpen(false);
+                setModalState({ ...modalState, isOpen: false });
                 navigate("/home")
             }
         } catch (error) {
-            toast.error("An error occurred, please try again.");
+            setModalState({ ...modalState, isOpen: false });
+            toast.error("An error occurred, please try again later.");
         }
     };
 
@@ -137,30 +147,30 @@ export default function UserDetails() {
     return (
         <>
             <h2 className='text-center text-3xl font-bold mt-20'>Welcome, {user.username}</h2>
-            <div className="flex-grow flex items-center justify-center p-4 m-10">
-                <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+            <div className="flex items-center justify-center p-4 m-10 space-x-20">
+                <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-2xl"> {/* User Info Card */}
                     <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">User Info</h2>
                     <div className="space-y-4 mb-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Username</label>
+                            <span className="mb-3 block text-sm font-medium text-gray-700">Username</span>
                             <p className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
                                 {user.username}
                             </p>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Email</label>
+                            <span className="mb-3 block text-sm font-medium text-gray-700">Email</span>
                             <p className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
                                 {user.email}
                             </p>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Account Created</label>
+                            <span className="mb-3 block text-sm font-medium text-gray-700">Account Created</span>
                             <p className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
                                 {new Date(user.createdAt).toLocaleDateString()}
                             </p>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Last Login</label>
+                            <span className="mb-3 block text-sm font-medium text-gray-700">Last Login</span>
                             <p className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
                                 {new Date(user.lastLogin).toLocaleString()}
                             </p>
@@ -168,12 +178,13 @@ export default function UserDetails() {
                     </div>
                     <form onSubmit={handleChangePassword} className="space-y-4">
                         <div>
-                            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">New Password</label>
+                            <h4 className='m-10 text-center font-bold text-xl'>Do you want to change password?</h4>
                             <div className="mt-1 relative">
                                 <input
                                     id="newPassword"
                                     name="newPassword"
                                     type={showPassword ? "text" : "password"}
+                                    placeholder='Enter New Password'
                                     required
                                     className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     value={updatedPassword.newPassword}
@@ -189,12 +200,12 @@ export default function UserDetails() {
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-700">Confirm New Password</label>
                             <div className="mt-1 relative">
                                 <input
                                     id="confirmNewPassword"
                                     name="confirmNewPassword"
                                     type={showPassword ? "text" : "password"}
+                                    placeholder='Confirm New Password'
                                     required
                                     className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                                     value={updatedPassword.confirmNewPassword}
@@ -213,43 +224,44 @@ export default function UserDetails() {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                className="w-full text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2"
                             >
                                 Update Password
                             </button>
                         </div>
                     </form>
                 </div>
-            </div>
-
-            {/* Danger Zone Section */}
-            <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md m-auto mt-10">
-                <h2 className="text-center text-2xl font-bold text-red-600 mb-4">Danger Zone</h2>
-                <p className="text-gray-600 mb-6">Please proceed with caution. These actions are irreversible.</p>
-
-                <div className="space-y-4">
-                    <button
-                        onClick={() => openConfirmModal('passwords')}
-                        className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
-                    >
-                        Delete All Passwords
-                    </button>
-                    <button
-                        onClick={() => openConfirmModal('account')}
-                        className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
-                    >
-                        Delete Account
-                    </button>
+    
+                {/* Danger Zone Section */}
+                <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-lg"> {/* Danger Zone Card */}
+                    <h2 className="text-center text-2xl font-bold text-red-600 mb-4">Danger Zone</h2>
+                    <p className="text-center text-gray-600 mb-6">Please proceed with caution. These actions are <strong>irreversible</strong>.</p>
+    
+                    <div className="space-y-4">
+                        <button
+                            onClick={() => openConfirmModal('passwords')}
+                            className="font-bold w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        >
+                            Delete All Passwords
+                        </button>
+                        <button
+                            onClick={() => openConfirmModal('account')}
+                            className="font-bold w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        >
+                            Delete Account
+                        </button>
+                    </div>
                 </div>
             </div>
             {/* Confirmation Modal */}
             <ConfirmationModal
-                isOpen={isConfirmModalOpen}
-                onClose={() => setIsConfirmModalOpen(false)}
-                onConfirm={confirmAction}
-                message={confirmMessage}
+                isOpen={modalState.isOpen}
+                onClose={() => setModalState({ ...modalState, isOpen: false })}
+                onConfirm={modalState.action}
+                message={modalState.message}
                 confirmText="Yes, I'm sure"
             />
         </>
     );
+    
 }

@@ -86,15 +86,15 @@ const Navbar = () => {
           </ul>
           {!token ? renderAuthLinks() : (
             <>
-              <div className="flex gap-3 justify-center items-center">
+              <div className="flex gap-6 justify-center items-center">
                 <Link to="/user"
-                  className="flex items-center gap-3">
+                  className="flex items-center gap-2">
                   <lord-icon
                     src="https://cdn.lordicon.com/hrjifpbq.json"
                     trigger="hover"
                     style={{ "width": "25px", "height": "25px", "filter": "invert(1)" }}>
                   </lord-icon>
-                  <span>Manage Account</span>
+                  <span>Your Account</span>
                 </Link>
                 <button
                   onClick={() => {
